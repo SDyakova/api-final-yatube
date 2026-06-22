@@ -16,6 +16,7 @@ class GroupAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "slug")
     list_display_links = ("id", "title")
     search_fields = ("title",)
+    prepopulated_fields = {"slug": ("title",)}
 
 
 @admin.register(Comment)
