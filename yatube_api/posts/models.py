@@ -3,11 +3,16 @@ from django.db import models
 
 User = get_user_model()
 
+TEXT_LIMIT = 20
+
 
 class Group(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     description = models.TextField(null=True, blank=True)
+
+    class Meta:
+        default_related_name = "%(class)s"
 
     def __str__(self):
         return self.title
@@ -29,8 +34,12 @@ class Post(models.Model):
         verbose_name="Группа",
     )
 
+    class Meta:
+        default_related_name = "%(class)s"
+        ordering = ["-pub_date"]
+
     def __str__(self):
-        return self.text
+        return self.text[:TEXT_LIMIT]
 
 
 class Comment(models.Model):
@@ -45,8 +54,11 @@ class Comment(models.Model):
         "Дата добавления", auto_now_add=True, db_index=True
     )
 
+    class Meta:
+        default_related_name = "%(class)s"
+
     def __str__(self):
-        return f"{self.author.username}: {self.text[:20]}"
+        return f"{self.author.username}: {self.text[:TEXT_LIMIT]}"
 
 
 class Follow(models.Model):
@@ -64,6 +76,7 @@ class Follow(models.Model):
     )
 
     class Meta:
+        default_related_name = "%(class)s"
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "following"], name="unique_follow"

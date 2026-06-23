@@ -1,80 +1,78 @@
-````markdown
 # API для Yatube
 
-API для социальной сети Yatube. Позволяет публиковать посты, оставлять комментарии, подписываться на авторов.
+API для социальной сети Yatube. Позволяет публиковать посты, оставлять комментарии, подписываться на авторов и просматривать группы.
 
-## Установка
+## Стек
 
-1. Клонировать репозиторий:
-   ```bash
-   git clone <url>
-   cd api-final-yatube
-   ```
-````
+- Python 3.12
+- Django 5
+- Django REST Framework
+- Simple JWT
+- SQLite
 
-2. Создать и активировать виртуальное окружение:
+## Как развернуть проект
 
-   ```bash
-   python -m venv venv
-   source venv/Scripts/activate
-   ```
+Клонировать репозиторий и перейти в папку:
+git clone <url>
+cd api-final-yatube
 
-3. Установить зависимости:
+Создать виртуальное окружение и активировать:
+python -m venv venv
+source venv/Scripts/activate
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+Установить зависимости:
+pip install -r requirements.txt
 
-4. Выполнить миграции:
+Выполнить миграции и запустить:
+cd yatube_api
+python manage.py migrate
+python manage.py runserver
 
-   ```bash
-   cd yatube_api
-   python manage.py migrate
-   ```
+Документация API: http://127.0.0.1:8000/redoc/
 
-5. Запустить сервер:
-   ```bash
-   python manage.py runserver
-   ```
+## Возможности API
+
+- Посты: просмотр, создание, редактирование, удаление
+- Комментарии: просмотр, создание, редактирование, удаление
+- Группы: только просмотр
+- Подписки: свои подписки, подписка на автора
+- JWT-аутентификация
+
+Неавторизованные — только чтение. Авторизованные — создание, редактирование и удаление своего контента.
 
 ## Примеры запросов
 
-### Получить список постов
+### Получить токен
 
-```http
+POST /api/v1/jwt/create/
+Content-Type: application/json
+
+{"username": "user", "password": "password"}
+
+Ответ: {"refresh": "...", "access": "..."}
+
+### Список постов
+
 GET /api/v1/posts/
-```
+
+Ответ: [{"id": 1, "text": "Текст", "author": "user", ...}]
 
 ### Создать пост
 
-```http
 POST /api/v1/posts/
-Content-Type: application/json
-Authorization: Bearer <token>
+Authorization: Bearer <токен>
 
-{
-    "text": "Текст поста"
-}
-```
+{"text": "Новый пост"}
 
-### Подписаться на пользователя
+### Подписаться на автора
 
-```http
 POST /api/v1/follow/
-Content-Type: application/json
-Authorization: Bearer <token>
+Authorization: Bearer <токен>
 
-{
-    "following": "username"
-}
-```
+{"following": "author_username"}
 
-## Документация
+Ответ: {"user": "user", "following": "author_username"}
 
-После запуска сервера документация доступна по адресу:
+## Автор
 
-- http://127.0.0.1:8000/redoc/
-
-```
-
-```
+Дьякова Светлана Сергеевна
